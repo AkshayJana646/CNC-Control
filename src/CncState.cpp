@@ -12,6 +12,7 @@ CncState::CncState() {
 
 void CncState::updateCncState() {
     Vector<3> accel = accelSensor->getAccel();
+
     float ax = accel.x();
     float ay = accel.y();
     float az = accel.z();
@@ -27,6 +28,9 @@ void CncState::updateCncState() {
         Serial.println("CNC OFF");
     }
 }
+
+
+
 
 
 
@@ -47,4 +51,15 @@ void CncState::stopCNC() {
 // Check if CNC is running
 bool CncState::isCncRunning() {
     return cncActive;
+}
+
+
+
+
+
+
+void CncState::get_Acceleration(){
+    Vector<3> accel = accelSensor->getAccel();
+    float z = accel.x();
+    Serial.println(z);
 }
