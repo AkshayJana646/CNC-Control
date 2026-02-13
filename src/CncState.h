@@ -7,16 +7,21 @@
 
 using namespace astra;
 
-class CncState
+class CncState : public State  
 {
+
 public:
     CncState();
 
     void updateCncState();
     bool isCncRunning();
+    
 
     // Pointer to accelerometer from library
     Accel* accelSensor;
+
+    //Getter
+    void get_Acceleration();
 
 private:
     bool cncActive;
