@@ -1,33 +1,36 @@
 #include <Arduino.h>
+#include <Wire.h>
+#include <Sensors/HW/IMU/BMI088.h>
 #include <Utils/Astra.h>
-#include <Sensors/HW/Accel/ADXL375.h>
 #include "CncState.h"
 
 using namespace astra;
 
-// Instantiate high-g accelerometer
-ADXL375 highGAccel("HighG", &Wire, 0x1D);
-
-// CNC controller
 CncState cncState;
+
+
+BMI088 imu("BMI088", &Wire);
 
 void setup() {
     Serial.begin(115200);
+    Wire.begin();
 
-    // Initialize accelerometer
-    highGAccel.begin();
-    highGAccel.setUpdateRate(50); // 50 Hz
+    AstraConfig config = AstraConfig()
+        .with6DoFIMU(&imu)  
+        .withState(&cncState);
 
-    // Link accelerometer to CNC state
-    cncState.accelSensor = &highGAccel;
+    Serial.println("Setup complete");
 }
 
 void loop() {
-    // Read accelerometer directly
-    Vector<3> accel = cncState.accelSensor->getAccel();
+    
     cncState.updateCncState();
 
+    // Read accelerometer
+    Vector<3> accel = imu.getAccelSensor()->getAccel();
+    Serial.print(accel.x());
+    Serial.print(accel.y());
+    Serial.print(accel.z());
 
-    delay(100);  // simple loop delay
+    delay(100);
 }
-
